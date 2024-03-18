@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -21,5 +22,14 @@ class Item extends Model
     public function discounts(): MorphMany
     {
         return $this->morphMany(Discount::class, 'discountable');
+    }
+
+    public function getDiscountedPriceAttribute()
+    {
+        $totalDiscountAmount = $this->discounts->sum('amount');
+
+        $discountAmount = ($this->price * $totalDiscountAmount) / 100;
+
+        return $this->price - $discountAmount;
     }
 }
