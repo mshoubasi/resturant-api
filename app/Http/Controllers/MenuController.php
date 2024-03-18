@@ -13,7 +13,7 @@ class MenuController extends Controller
      */
     public function __invoke()
     {
-        $menu = Category::with('subcategories')->get();
+        $menu = Category::whereNull('Category_id')->with(['subcategories.items', 'items'])->get();
 
         return CategoryResource::collection($menu);
     }
