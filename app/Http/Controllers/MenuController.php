@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
-use Illuminate\Http\Request;
 
 class MenuController extends Controller
 {
@@ -13,7 +12,7 @@ class MenuController extends Controller
      */
     public function __invoke()
     {
-        $menu = Category::whereNull('Category_id')->with(['subcategories.items', 'items'])->get();
+        $menu = Category::whereNull('Category_id')->with(['subcategories.discounts', 'subcategories.items', 'items'])->get();
 
         return CategoryResource::collection($menu);
     }
