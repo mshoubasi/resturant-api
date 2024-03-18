@@ -30,6 +30,6 @@ class Item extends Model
 
         $discountAmount = ($this->price * $totalDiscountAmount) / 100;
 
-        return $this->price - $discountAmount;
+        return $totalDiscountAmount ? $this->price - $discountAmount : 'no discount';
     }
 }
