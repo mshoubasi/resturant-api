@@ -16,4 +16,9 @@ class Item extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function discounts(): MorphMany
+    {
+        return $this->morphMany(Discount::class, 'discountable');
+    }
 }
