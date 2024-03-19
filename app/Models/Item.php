@@ -26,10 +26,32 @@ class Item extends Model
 
     public function getDiscountedPriceAttribute()
     {
-        $totalDiscountAmount = $this->discounts->sum('amount');
+        $discount = $this->getApplicableDiscount();
 
-        $discountAmount = ($this->price * $totalDiscountAmount) / 100;
+        if ($discount) {
+            $discountAmount = ($this->price * $discount->amount) / 100;
+            return $this->price - $discountAmount;
+        }
 
-        return $totalDiscountAmount ? $this->price - $discountAmount : 'no discount';
+        return $this->price;
+    }
+
+    private function getApplicableDiscount()
+    {
+        if ($this->discounts->isNotEmpty()) {
+            return $this->discounts->first();
+        }
+
+
+        if ($this->category && $this->category->discounts->isNotEmpty()) {
+            return $this->category->discounts->first();
+        }
+
+
+        if ($this->category && $this->category->parent && $this->category->parent->discounts->isNotEmpty()) {
+            return $this->category->parent->discounts->first();
+        }
+
+        return null;
     }
 }
