@@ -38,20 +38,11 @@ class Item extends Model
 
     private function getApplicableDiscount()
     {
-        if ($this->discounts->isNotEmpty()) {
-            return $this->discounts->first();
-        }
-
-
-        if ($this->category && $this->category->discounts->isNotEmpty()) {
-            return $this->category->discounts->first();
-        }
-
-
-        if ($this->category && $this->category->parent && $this->category->parent->discounts->isNotEmpty()) {
-            return $this->category->parent->discounts->first();
-        }
-
-        return null;
+        return $this->discounts->isNotEmpty()
+            ? $this->discounts->first() : ($this->category && $this->category->discounts->isNotEmpty()
+                ? $this->category->discounts->first() : ($this->category && $this->category->parent && $this->category->parent->discounts->isNotEmpty()
+                    ? $this->category->parent->discounts->first() : null
+                )
+            );
     }
 }
